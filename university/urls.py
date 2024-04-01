@@ -8,9 +8,9 @@ from rest_framework import permissions
 from blog import views
 
 router = routers.DefaultRouter()
-router.register('search',
-                views.UniversitySearchAPIView,
-                basename='search-university')
+# router.register('search',
+#                 views.UniversitySearchAPIView,
+#                 basename='search-university')
 router.register(r'university', views.UniversityViewSet)
 router.register(r'feedback', views.FeedbackViewSet)
 
