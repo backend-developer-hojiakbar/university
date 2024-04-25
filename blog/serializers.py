@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import University, Faculties, Sertificate, Feedback
+from .models import *
 
 
 class FacultiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculties
-        fields = ['university_id', 'name']
+        fields = ['name']
 
 class FeedbackSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,20 +15,26 @@ class FeedbackSerializer(serializers.ModelSerializer):
 class SertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sertificate
-        fields = ['university_id', 'img']
+        fields = ['img']
+
 
 class UniversitySerializer(serializers.ModelSerializer):
-    sertificate = SertificateSerializer(many=True, read_only=True)
-    uploaded_sertificate = serializers.ListField(
-        child=serializers.ImageField(max_length=100000, allow_empty_file=False, use_url=False),
-        write_only=True
-    )
-    faculties = FacultiesSerializer(many=True, read_only=True)
-    list_faculties = serializers.ListField(
-        child=serializers.ImageField(max_length=100000, allow_empty_file=False, use_url=False),
-        write_only=True
-    )
-
     class Meta:
         model = University
-        fields = ['id','name', 'bio', 'country', 'city', 'payment', 'sertificate', 'uploaded_sertificate', 'faculties', 'list_faculties']
+        fields = '__all__'
+
+class CountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Country
+        fields = ['name']
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['name']
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ['name']

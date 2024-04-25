@@ -7,8 +7,8 @@ from functools import reduce
 from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
-from .serializers import UniversitySerializer, FeedbackSerializer, SertificateSerializer, FacultiesSerializer
-from .models import University, Faculties, Sertificate, Feedback
+from .serializers import *
+from .models import *
 from rest_framework import generics
 from django.db.models import Q
 
@@ -25,17 +25,37 @@ class FeedbackViewSet(viewsets.ModelViewSet):
 class UniversitySearchAPIView(generics.ListAPIView):
     serializer_class = UniversitySerializer
 
-    @action(detail=False, methods=['get'])
     def get_queryset(self):
         queryset = University.objects.all()
-        query = self.request.query_params.get('q', None)
-        if query is not None:
-            query_seq = query.split(' ')
+        search_query = self.request.query_params.get('search', None)
+        if search_query:
             queryset = queryset.filter(
-                Q(name__icontains=query_seq) |
-                Q(country__icontains=query_seq) |
-                Q(city__icontains=query_seq) |
-                Q(payment__icontains=query_seq) |
-                Q(faculties__name__icontains=query_seq)
+                Q(country_id__icontains=search_query) |
+                Q(city_id__icontains=search_query) |
+                Q(payment_id__icontains=search_query) |
+                Q(faculties_id__icontains=search_query) |
+                Q(certificates_id__icontains=search_query)
             )
         return queryset
+
+
+class CountryViewSet(viewsets.ModelViewSet):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+class FacultiesViewSet(viewsets.ModelViewSet):
+    queryset = Faculties.objects.all()
+    serializer_class = FacultiesSerializer
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+class SertificateViewSet(viewsets.ModelViewSet):
+    queryset = Sertificate.objects.all()
+    serializer_class = SertificateSerializer
+
