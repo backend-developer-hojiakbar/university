@@ -19,9 +19,21 @@ class SertificateSerializer(serializers.ModelSerializer):
 
 
 class UniversitySerializer(serializers.ModelSerializer):
+    facultities = FacultiesSerializer(many=True, read_only=True)
+    facultities_list = serializers.ListField(
+        child=serializers.CharField(max_length=100000),
+        write_only=True
+    )
+
     class Meta:
         model = University
-        fields = '__all__'
+        fields = ('name','bio','country', 'city', 'payment', 'sertificate', "facultities", "facultities_list")
+    def create(self, validated_data):
+        facultities_list = validated_data.pop("facultities_list")
+        university_id = University.objects.create(**validated_data)
+        for name in facultities_list:
+            new_faculties = Faculties.objects.create(university_id=university_id, name=name)
+        return university_id
 
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:

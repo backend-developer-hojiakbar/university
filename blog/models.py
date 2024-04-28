@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.postgres.fields import ArrayField
 # Create your models here.
 
 
@@ -50,8 +50,16 @@ class University(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-    facultities = models.ForeignKey(Faculties, on_delete=models.CASCADE)
     sertificate = models.ForeignKey(Sertificate, on_delete=models.CASCADE)
+
+
+
+    def __str__(self):
+        return self.name
+
+class Faculties(models.Model):
+    university_id = models.ForeignKey(University, on_delete=models.CASCADE, related_name="faculties")
+    name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
